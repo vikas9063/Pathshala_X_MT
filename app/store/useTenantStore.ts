@@ -27,11 +27,20 @@ export const useTenantOrPathshalaStore = create<TenantOrPathshalaState>((set) =>
       if (!res.success) {
         throw new Error(res.message);
       }
+
       localStorage.setItem("pathshala_subdomain", subdomain);
 
-      set({ pathshala: res.result, loading: false });
+      set({
+        pathshala: res.result,
+        loading: false,
+        error: null,
+      });
     } catch (err: any) {
-      set({ error: err.message || "Failed to load pathshala", loading: false });
+      set({
+        pathshala: null,
+        loading: false,
+        error: err?.response?.data?.message || err.message || "Failed to load pathshala",
+      });
     }
   },
 

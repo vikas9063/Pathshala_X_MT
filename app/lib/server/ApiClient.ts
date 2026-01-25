@@ -17,7 +17,7 @@ export const BASE_URL =
 export const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
-  withCredentials: false,
+  withCredentials: true,
   headers: {
     Accept: 'application/json',
   },

@@ -68,7 +68,7 @@ const navigationData = [
 
 export default function PathshalaNavbar() {
   const [mounted, setMounted] = useState(false)
-  const pathshala = useTenantOrPathshalaStore((state) => state.pathshala)
+  const pathshala = useTenantOrPathshalaStore((state) => state.pathshala);
 
   useEffect(() => {
     // marks component as hydrated

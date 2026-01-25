@@ -34,7 +34,7 @@ const LoginPage = () => {
         localStorage.setItem("refreshToken", res.result.refreshToken);
         localStorage.setItem("userName", res.result.userName);
         // Redirect or update UI as needed
-        navigate("/dashboard");
+        navigate(`/${res.result.userName}/dashboard`);
         return;
       }
       toast.error("Login failed");
