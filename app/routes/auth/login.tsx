@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GraduationCap, Loader2, Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -8,12 +8,14 @@ import type { LoginResponse } from "~/lib/types/user";
 import type { ApiResponse } from "~/lib/types/patshala";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { useLoggedInUserStore } from "~/store/useLoggedinUserStore";
 
 const LoginPage = () => {
   const pathshala = useTenantOrPathshalaStore((state) => state.pathshala);
   const [formData, setFormData] = useState({ userName: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const {user, isLoggedIn, resetAuthState} = useLoggedInUserStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +49,9 @@ const LoginPage = () => {
     }
   };
 
+  useEffect(() => {
+    resetAuthState();
+  }, [resetAuthState]);
 
   return (
     <div className="relative min-h-[90vh] w-full flex items-center justify-center bg-[#f8fafc] overflow-hidden px-4">

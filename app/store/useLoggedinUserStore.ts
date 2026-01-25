@@ -68,5 +68,5 @@ export const useLoggedInUserStore = create<LoggedInUserStore>((set, get) => ({
     }
   },
 
-  resetAuthState: () => set({ state: "idle", error: null, loading: false }),
+  resetAuthState: () => set({ state: "idle", error: null, loading: false, user: null, isLoggedIn: false }),
 }));
