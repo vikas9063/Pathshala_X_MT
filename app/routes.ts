@@ -13,7 +13,7 @@ export default [
         // Account pages inside tenant
         layout("./layouts/account-layout.tsx", [
             route(":userName/dashboard", "./routes/accounts/dashboard/dashboard.tsx"),
-            //   route("profile", "./routes/account/profile.tsx"),
+            route(":userName/account", "./routes/accounts/profile/profile.tsx"),
         ]),
         // Catch all 404 inside tenant
         route("*", "./routes/error/error-page.tsx"),

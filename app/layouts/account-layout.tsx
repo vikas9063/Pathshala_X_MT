@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router';
+import { AppSidebar } from '~/components/app-sidebar';
 import ErrorState from '~/components/error/error-comp';
 import Loading from '~/components/loading/loading';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '~/components/ui/breadcrumb';
+import { Separator } from '~/components/ui/separator';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
 import { useLoggedInUserStore } from '~/store/useLoggedinUserStore';
 import { useTenantOrPathshalaStore } from '~/store/useTenantStore';
 
@@ -36,7 +41,36 @@ const AccountLayout = () => {
   }
 
   if (isLoggedIn && user && state === 'loaded') {
-    return <div>AccountLayout - {user.name}</div>;
+    return <SidebarProvider>
+              <AppSidebar username={user.userName} />
+              <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                  <div className="flex items-center gap-2 px-4">
+                    <SidebarTrigger className="-ml-1" />
+                    <Separator
+                      orientation="vertical"
+                      className="mr-2 data-[orientation=vertical]:h-4"
+                    />
+                    <Breadcrumb>
+                      <BreadcrumbList>
+                        <BreadcrumbItem className="hidden md:block">
+                          <BreadcrumbLink href="#">
+                            Building Your Application
+                          </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator className="hidden md:block" />
+                        <BreadcrumbItem>
+                          <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                        </BreadcrumbItem>
+                      </BreadcrumbList>
+                    </Breadcrumb>
+                  </div>
+                </header>
+                <div className="flex min-h-screen px-5 py-2 bg-background">
+                  <Outlet />
+                </div>
+              </SidebarInset>
+    </SidebarProvider>;
   }
 
   // Fallback: if no slug or still verifying
