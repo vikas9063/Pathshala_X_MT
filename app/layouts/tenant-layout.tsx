@@ -1,71 +1,63 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Outlet } from "react-router";
-import ErrorState from "~/components/error/error-comp";
-import Loading from "~/components/loading/loading";
-import { Toaster } from "~/components/ui/sonner";
-import { useTenantOrPathshalaStore } from "~/store/useTenantStore";
+import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router';
+import ErrorState from '~/components/error/error-comp';
+import Loading from '~/components/loading/loading';
+import { useTenantOrPathshalaStore } from '~/store/useTenantStore';
 
 export const getTenantSlug = (hostname: string): string | null => {
-  if (hostname === "localhost") return null;
-  const parts = hostname.split(".");
+  if (hostname === 'localhost') return null;
+  const parts = hostname.split('.');
   if (parts.length >= 2) {
-    return parts[0] === "www" ? parts[1] : parts[0];
+    return parts[0] === 'www' ? parts[1] : parts[0];
   }
   return null;
 };
 
-const TenantLayout: React.FC = () => {
-  const [isMounted, setIsMounted] = useState(false);
+const TenantOrPathshalaLayout = () => {
+  const { state, pathshala, loading, error, fetchPathshalaBySubdomain } = useTenantOrPathshalaStore();
+  const [slug, setSlug] = useState<string | null>("");
 
-  const { pathshala, loading, error, fetchPathshalaBySubdomain } =
-    useTenantOrPathshalaStore();
+  const loadTenantOrPathshala = async () => {
+    if (typeof window === 'undefined') return;
+    const hostname = window.location.hostname;
+    const subdomain = getTenantSlug(hostname);
 
-  const slug = useMemo(() => {
-    if (typeof window !== "undefined") {
-      return getTenantSlug(window.location.hostname);
+    if (subdomain) {
+      setSlug(subdomain);
+      await fetchPathshalaBySubdomain(subdomain);
+    } else {
+      setSlug(null);
     }
-    return null;
-  }, []);
+  };
 
   useEffect(() => {
-    setIsMounted(true);
-    if (slug) {
-      fetchPathshalaBySubdomain(slug);
+    if (state === 'idle' || state === undefined) {
+      loadTenantOrPathshala();
     }
-  }, [slug, fetchPathshalaBySubdomain]);
+  }, [state]);
 
-  if (!isMounted) return null;
+  if (loading && state === 'loading') {
+    return <Loading message="Loading Pathshala Details..." fullPage />;
+  }
 
-  if (!slug) {
+  if (error && state === 'error') {
     return (
       <ErrorState
-        title="Invalid Access"
-        message="Please use your school's subdomain."
-        onRetry={() => window.location.reload()}
+        message="Invalid Pathshala or Tenant id, please check the URL"
+        title="Invalid Tenant/SLUG"
       />
     );
   }
 
-  if (loading || (!pathshala && !error)) {
-    return <Loading message="Syncing school data..." fullPage />;
+  if (pathshala && state === 'loaded') {
+    return <Outlet />;
   }
 
-  if (error || !pathshala) {
-    return (
-      <ErrorState
-        title="Pathshala Not Found"
-        message={error || "Invalid school"}
-        onRetry={() => fetchPathshalaBySubdomain(slug)}
-      />
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      <Outlet context={{ pathshala, slug }} />
-      <Toaster position="top-right" richColors />
-    </div>
+  return slug === null ? (
+    <ErrorState message="No slug detected in the URL" title="No SLUG Detected" />
+  ) : (
+    <Loading message="Verifying Pathshala Details..." fullPage />
   );
 };
 
-export default TenantLayout;
+export default TenantOrPathshalaLayout;

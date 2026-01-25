@@ -7,7 +7,7 @@ export type LoggedInUserStore = {
   user: UserProfile | null;
   isLoggedIn: boolean;
   loading: boolean;
-  hasAttempted: boolean; // Tracks if the initial auth check finished
+  state: "loading" | "error" | "loaded" | "idle";
   error: string | null;
 
   getLoggedInUser: (subdomain: string) => Promise<void>;
@@ -19,14 +19,14 @@ export const useLoggedInUserStore = create<LoggedInUserStore>((set, get) => ({
   user: null,
   isLoggedIn: false,
   loading: false,
-  hasAttempted: false,
+  state: "idle",
   error: null,
 
   getLoggedInUser: async (subdomain: string) => {
     // Prevent duplicate calls if already loading or already logged in
     if (get().loading || (get().isLoggedIn && get().user)) return;
 
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, state: "loading" });
 
     try {
       const res: ApiResponse<UserProfile> = await api.get("/user/loggedin-user", {
@@ -39,7 +39,7 @@ export const useLoggedInUserStore = create<LoggedInUserStore>((set, get) => ({
         user: res.result as UserProfile,
         isLoggedIn: !!res.result,
         loading: false,
-        hasAttempted: true,
+        state: "loaded",
         error: null,
       });
     } catch (err: any) {
@@ -47,7 +47,7 @@ export const useLoggedInUserStore = create<LoggedInUserStore>((set, get) => ({
         user: null,
         isLoggedIn: false,
         loading: false,
-        hasAttempted: true, // Crucial: mark as tried even on failure
+        state: "error",
         error: err?.response?.data?.message || err.message || "Session expired",
       });
     }
@@ -62,11 +62,11 @@ export const useLoggedInUserStore = create<LoggedInUserStore>((set, get) => ({
         user: null,
         isLoggedIn: false,
         loading: false,
-        hasAttempted: false,
+        state: "idle",
         error: null,
       });
     }
   },
 
-  resetAuthState: () => set({ hasAttempted: false, error: null, loading: false }),
+  resetAuthState: () => set({ state: "idle", error: null, loading: false }),
 }));
