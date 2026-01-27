@@ -1,6 +1,7 @@
-import OnboardingBanner from "~/components/banners/OnboardingBanner";
 import { useTenantOrPathshalaStore } from "~/store/useTenantStore"
 import { useLoggedInUserStore } from "~/store/useLoggedinUserStore";
+import OnboardingBannerSettingpathshala from "~/components/banners/OnboardingBannerSettingpathshala";
+import NavigationHeaders from "~/components/ui/navigation-headers";
 
 const dashboard = () => {
 
@@ -17,9 +18,15 @@ const dashboard = () => {
     return 50;
   }
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full bg-muted/30 p-6 space-y-8">
+      <NavigationHeaders
+                title="Pathshala Settings"
+                description="Manage school-wide settings, branding, and core contact information."
+                // rightButtonLabel="View Public Profile"
+                // onRightButtonClick={() => navigate("/public-profile")}
+            />
       {user?.permissions.includes(3) && !pathshala?.contactInfo && (
-        <OnboardingBanner progress={calculatePathshalaCompletePercentage()} />
+        <OnboardingBannerSettingpathshala progress={calculatePathshalaCompletePercentage()} username={user?.userName} />
       )}
     </div>
 

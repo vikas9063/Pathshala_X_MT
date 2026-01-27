@@ -1,3 +1,5 @@
+
+import { useState } from "react"
 import {
     Card,
     CardContent,
@@ -15,43 +17,120 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
+import NavigationHeaders from "~/components/ui/navigation-headers"
+import { useNavigate } from "react-router"
 
 export default function PathshalaSettingsPage() {
+
+    /* ================= GENERAL INFO ================= */
+
+    const navigate = useNavigate();
+
+    const generalInitial = {
+        name: "VK Learning Center",
+        code: "VK_LEARNING_001",
+        type: "school",
+        subdomain: "vk-learnings",
+    }
+
+    const [general, setGeneral] = useState(generalInitial)
+
+    const generalChanged =
+        JSON.stringify(general) !== JSON.stringify(generalInitial)
+
+    function saveGeneralInfo() {
+        console.log("Saving General Info", general)
+        Object.assign(generalInitial, general)
+    }
+
+    /* ================= CONTACT INFO ================= */
+
+    const contactInitial = {
+        phone1: "+91 98765-43210",
+        phone2: "+91 22-1234567",
+        email1: "contact@vklearning.edu.in",
+        email2: "admin@vklearning.edu.in",
+        fax: "+91 22-1234568",
+    }
+
+    const [contact, setContact] = useState(contactInitial)
+
+    const contactChanged =
+        JSON.stringify(contact) !== JSON.stringify(contactInitial)
+
+    function saveContactInfo() {
+        console.log("Saving Contact Info", contact)
+        Object.assign(contactInitial, contact)
+    }
+
+    /* ================= LEADERSHIP ================= */
+
+    const leadershipInitial = {
+        principalName: "Dr. Vikram Kumar",
+        principalPhone: "+91 99999-88888",
+        principalEmail: "principal@vklearning.edu.in",
+        adminName: "Mr. Rajesh Singh",
+        adminPhone: "+91 99999-77777",
+    }
+
+    const [leadership, setLeadership] = useState(leadershipInitial)
+
+    const leadershipChanged =
+        JSON.stringify(leadership) !== JSON.stringify(leadershipInitial)
+
+    function saveLeadership() {
+        console.log("Saving Leadership", leadership)
+        Object.assign(leadershipInitial, leadership)
+    }
+
     return (
         <div className="min-h-screen w-full bg-muted/30 px-8 py-6 space-y-8">
-            {/* Page Header */}
-            <div className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-2xl font-semibold">Pathshala Settings</h1>
-                    <p className="text-sm text-muted-foreground">
-                        Manage school-wide settings, branding, and core contact information.
-                    </p>
-                </div>
-                <Button variant="outline">View Public Profile</Button>
-            </div>
+            <NavigationHeaders
+                title="Pathshala Settings"
+                description="Manage school-wide settings, branding, and core contact information."
+                rightButtonLabel="View Public Profile"
+                onRightButtonClick={() => navigate("/public-profile")}
+            />
 
-            {/* General Information */}
+            {/* ================= GENERAL ================= */}
             <Card className="w-full">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>General Information</CardTitle>
-                    <Button size="sm">Save General Info</Button>
+                    <Button size="sm" disabled={!generalChanged} onClick={saveGeneralInfo}>
+                        Save General Info
+                    </Button>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-2">
                             <Label>Pathshala Name</Label>
-                            <Input className="h-10" defaultValue="VK Learning Center" />
+                            <Input
+                                value={general.name}
+                                onChange={(e) =>
+                                    setGeneral({ ...general, name: e.target.value })
+                                }
+                            />
                         </div>
 
                         <div className="space-y-2">
                             <Label>Pathshala Code</Label>
-                            <Input className="h-10" defaultValue="VK_LEARNING_001" />
+                            <Input
+                                value={general.code}
+                                onChange={(e) =>
+                                    setGeneral({ ...general, code: e.target.value })
+                                }
+                            />
                         </div>
 
                         <div className="space-y-2">
                             <Label>Pathshala Type</Label>
-                            <Select defaultValue="school">
+                            <Select
+                                value={general.type}
+                                onValueChange={(v) =>
+                                    setGeneral({ ...general, type: v })
+                                }
+                            >
                                 <SelectTrigger>
                                     <SelectValue />
                                 </SelectTrigger>
@@ -68,7 +147,13 @@ export default function PathshalaSettingsPage() {
                         <div className="space-y-2">
                             <Label>Subdomain</Label>
                             <div className="flex">
-                                <Input className="h-10 rounded-r-none" defaultValue="vk-learnings" />
+                                <Input
+                                    className="rounded-r-none"
+                                    value={general.subdomain}
+                                    onChange={(e) =>
+                                        setGeneral({ ...general, subdomain: e.target.value })
+                                    }
+                                />
                                 <div className="flex items-center rounded-r-md border border-l-0 px-3 text-sm text-muted-foreground">
                                     .pathshala.io
                                 </div>
@@ -85,124 +170,80 @@ export default function PathshalaSettingsPage() {
                 </CardContent>
             </Card>
 
-            {/* School Branding */}
-            <Card className="w-full">
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>School Branding</CardTitle>
-                    <Button size="sm">Save Branding</Button>
-                </CardHeader>
-
-                <CardContent className="flex flex-col md:flex-row gap-6">
-                    <div className="flex h-36 w-36 items-center justify-center rounded-md border border-dashed">
-                        Logo
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label>School Logo</Label>
-                        <p className="text-sm text-muted-foreground">
-                            Upload a high-quality logo for your reports and profile.
-                            Recommended: 512×512 PNG.
-                        </p>
-                        <div className="flex items-center gap-2">
-                            <Button size="sm">Upload New</Button>
-                            <Button size="sm" variant="link">
-                                Remove
-                            </Button>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                            school-logo-vk.png · 240 KB
-                        </p>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Contact Information */}
+            {/* ================= CONTACT ================= */}
             <Card className="w-full">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Contact Information</CardTitle>
-                    <Button size="sm">Save Contact Info</Button>
+                    <Button size="sm" disabled={!contactChanged} onClick={saveContactInfo}>
+                        Save Contact Info
+                    </Button>
                 </CardHeader>
 
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <Label>Primary Phone</Label>
-                        <Input className="h-10" defaultValue="+91 98765-43210" />
+                        <Input value={contact.phone1} onChange={(e) => setContact({ ...contact, phone1: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Secondary Phone</Label>
-                        <Input className="h-10" defaultValue="+91 22-1234567" />
+                        <Input value={contact.phone2} onChange={(e) => setContact({ ...contact, phone2: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Primary Email</Label>
-                        <Input className="h-10" defaultValue="contact@vklearning.edu.in" />
+                        <Input value={contact.email1} onChange={(e) => setContact({ ...contact, email1: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Alternate Email</Label>
-                        <Input className="h-10" defaultValue="admin@vklearning.edu.in" />
+                        <Input value={contact.email2} onChange={(e) => setContact({ ...contact, email2: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Fax Number</Label>
-                        <Input className="h-10" defaultValue="+91 22-1234568" />
+                        <Input value={contact.fax} onChange={(e) => setContact({ ...contact, fax: e.target.value })} />
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Leadership */}
+            {/* ================= LEADERSHIP ================= */}
             <Card className="w-full">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Leadership & Admin Contact</CardTitle>
-                    <Button size="sm">Save Leadership</Button>
+                    <Button size="sm" disabled={!leadershipChanged} onClick={saveLeadership}>
+                        Save Leadership
+                    </Button>
                 </CardHeader>
 
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                         <Label>Principal Name</Label>
-                        <Input className="h-10" defaultValue="Dr. Vikram Kumar" />
+                        <Input value={leadership.principalName} onChange={(e) => setLeadership({ ...leadership, principalName: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Principal Phone</Label>
-                        <Input className="h-10" defaultValue="+91 99999-88888" />
+                        <Input value={leadership.principalPhone} onChange={(e) => setLeadership({ ...leadership, principalPhone: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Principal Email</Label>
-                        <Input className="h-10" defaultValue="principal@vklearning.edu.in" />
+                        <Input value={leadership.principalEmail} onChange={(e) => setLeadership({ ...leadership, principalEmail: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Admin Contact Name</Label>
-                        <Input className="h-10" defaultValue="Mr. Rajesh Singh" />
+                        <Input value={leadership.adminName} onChange={(e) => setLeadership({ ...leadership, adminName: e.target.value })} />
                     </div>
 
                     <div className="space-y-2">
                         <Label>Admin Contact Phone</Label>
-                        <Input className="h-10" defaultValue="+91 99999-77777" />
+                        <Input value={leadership.adminPhone} onChange={(e) => setLeadership({ ...leadership, adminPhone: e.target.value })} />
                     </div>
                 </CardContent>
             </Card>
 
-            {/* System Info */}
-            <Card className="w-full">
-                <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                    <div>
-                        <p className="text-muted-foreground">Pathshala ID</p>
-                        <p>PS-IND-4492-VK-2024</p>
-                    </div>
-                    <div>
-                        <p className="text-muted-foreground">Created On</p>
-                        <p>12 Jan 2024, 10:45 AM</p>
-                    </div>
-                    <div>
-                        <p className="text-muted-foreground">Last Updated</p>
-                        <p>Yesterday, 04:32 PM</p>
-                    </div>
-                </CardContent>
-            </Card>
         </div>
     )
 }

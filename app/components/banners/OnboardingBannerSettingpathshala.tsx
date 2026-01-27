@@ -2,10 +2,11 @@ import { ArrowRight, CheckCircle2, Circle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
 import { Card, CardContent } from "~/components/ui/card";
+import { Link } from "react-router";
 
-export default function OnboardingBanner({ progress }: { progress: number }) {
+export default function OnboardingBannerSettingpathshala({ progress, username }: { progress: number, username: string }) {
   return (
-    <Card className="border-none shadow-none bg-muted/50">
+    <Card className="border-none shadow-none bg-muted">
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
 
@@ -40,9 +41,11 @@ export default function OnboardingBanner({ progress }: { progress: number }) {
 
           {/* Right Side: Action Button */}
           <div className="shrink-0 w-full md:w-auto">
-            <Button size="lg" className="w-full md:w-auto gap-2">
-              Finish Setup <ArrowRight className="h-4 w-4" />
-            </Button>
+            <Link to={`/${username}/settings/pathshala`}>
+              <Button size="lg" className="w-full md:w-auto gap-2">
+                Finish Setup <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
           </div>
 
         </div>
