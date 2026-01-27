@@ -14,6 +14,10 @@ export default [
         layout("./layouts/account-layout.tsx", [
             route(":userName/dashboard", "./routes/accounts/dashboard/dashboard.tsx"),
             route(":userName/account", "./routes/accounts/profile/profile.tsx"),
+
+
+            // Settings Routes
+            route(":userName/settings/pathshala", "./routes/accounts/settings/pathshala-settings.tsx"),
         ]),
         // Catch all 404 inside tenant
         route("*", "./routes/error/error-page.tsx"),

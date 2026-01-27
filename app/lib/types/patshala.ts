@@ -33,5 +33,14 @@ export type Pathshala = {
     createdOn: string; // ISO timestamp
     updatedOn: string; // ISO timestamp
     contactInfo: PathshalaContactInfo | null;
+    logoDetails: FileDetails | null;
 };
+
+export type FileDetails = {
+    fileName: string;
+    fileType: string;
+    fileBase64: string;
+    fileExtension: string;
+    fileDetailsId: string;
+}
 

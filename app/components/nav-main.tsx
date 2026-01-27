@@ -1,4 +1,5 @@
 import { ChevronRight, type LucideIcon } from "lucide-react"
+import { Link } from "react-router"
 
 import {
   Collapsible,
@@ -18,6 +19,7 @@ import {
 
 export function NavMain({
   items,
+  username,
 }: {
   items: {
     title: string
@@ -29,6 +31,7 @@ export function NavMain({
       url: string
     }[]
   }[]
+  username?: string
 }) {
   return (
     <SidebarGroup>
@@ -54,9 +57,9 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                        <Link to={`/${username}${subItem.url}`}>
                           <span>{subItem.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

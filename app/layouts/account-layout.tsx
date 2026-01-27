@@ -83,9 +83,9 @@ const AccountLayout = () => {
             </div>
           </div>
         </header>
-        <div className="flex min-h-screen px-5 py-2 bg-background">
+        <main className="flex min-h-screen px-5 py-2 bg-background">
           <Outlet />
-        </div>
+        </main>
       </SidebarInset>
     </SidebarProvider>;
   }

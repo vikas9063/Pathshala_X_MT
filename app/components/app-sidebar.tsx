@@ -121,8 +121,8 @@ const data = {
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "Pathshala",
+          url: "/settings/pathshala",
         },
         {
           title: "Team",
@@ -162,7 +162,7 @@ export function AppSidebar({ username, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={data.projects} username={username} />
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} username={username} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

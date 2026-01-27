@@ -1,9 +1,9 @@
 export type LoginResponse = {
-    userName: string;
-    accessToken: string;
-    refreshToken: string;
-    expiresIn: number;
-    type: string;
+  userName: string;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  type: string;
 };
 
 export type UserProfile = {
@@ -13,8 +13,8 @@ export type UserProfile = {
   enabled: boolean;
   mobileNo: string;
   name: string;
-  permissions: string[];  
-  role: string;           
+  permissions: number[];
+  role: string;
   userId: number;
   userName: string;
 };
