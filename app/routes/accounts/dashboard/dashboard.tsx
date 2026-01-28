@@ -9,23 +9,56 @@ const dashboard = () => {
   const { pathshala } = useTenantOrPathshalaStore();
   const { user } = useLoggedInUserStore();
   const calculatePathshalaCompletePercentage = () => {
-    if (!pathshala?.contactInfo) {
-      return 25;
+    if (!pathshala) return 0;
+
+    let percentage = 25;
+
+    const contact = pathshala.contactInfo;
+
+    /* ===== Step 2: Any contact info ===== */
+    const hasAnyContactInfo =
+      !!contact &&
+      (
+        contact.primaryPhone ||
+        contact.secondaryPhone ||
+        contact.email ||
+        contact.alternateEmail ||
+        contact.faxNumber
+      );
+
+    if (hasAnyContactInfo) {
+      percentage = 50;
     }
-    if (!pathshala?.logoDetails) {
-      return 75;
+
+    /* ===== Step 3: Leadership info complete ===== */
+    const hasLeadershipInfo =
+      !!contact &&
+      !!contact.principalName &&
+      !!contact.principalPhone &&
+      !!contact.adminContactName &&
+      !!contact.adminContactPhone;
+
+    if (hasLeadershipInfo) {
+      percentage = 75;
     }
-    return 50;
-  }
+
+    /* ===== Step 4: Logo uploaded ===== */
+    if (pathshala.logoDetails) {
+      percentage = 100;
+    }
+
+    return percentage;
+  };
+
   return (
     <div className="min-h-screen w-full bg-muted/30 p-6 space-y-8">
       <NavigationHeaders
-                title="Pathshala Settings"
-                description="Manage school-wide settings, branding, and core contact information."
-                // rightButtonLabel="View Public Profile"
-                // onRightButtonClick={() => navigate("/public-profile")}
-            />
-      {user?.permissions.includes(3) && !pathshala?.contactInfo && (
+        title={`Hi, ${user?.name}`}
+        description="Welcome to your dashboard"
+      // rightButtonLabel="View Public Profile"
+      // onRightButtonClick={() => navigate("/public-profile")}
+      />
+      {user?.permissions.includes(3) && calculatePathshalaCompletePercentage() < 100 && (
         <OnboardingBannerSettingpathshala progress={calculatePathshalaCompletePercentage()} username={user?.userName} />
       )}
     </div>

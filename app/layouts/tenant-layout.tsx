@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router';
 import ErrorState from '~/components/error/error-comp';
 import Loading from '~/components/loading/loading';
+import { Toaster } from '~/components/ui/sonner';
 import { useTenantOrPathshalaStore } from '~/store/useTenantStore';
 
 export const getTenantSlug = (hostname: string): string | null => {
@@ -50,7 +51,10 @@ const TenantOrPathshalaLayout = () => {
   }
 
   if (pathshala && state === 'loaded') {
-    return <Outlet />;
+    return <>
+      <Outlet />
+      <Toaster position="top-right" richColors closeButton />
+    </>;
   }
 
   return slug === null ? (

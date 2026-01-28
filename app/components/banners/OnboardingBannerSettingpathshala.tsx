@@ -32,11 +32,27 @@ export default function OnboardingBannerSettingpathshala({ progress, username }:
 
             {/* Checklist Items */}
             <div className="flex flex-wrap gap-x-4 gap-y-2">
-              <SetupItem label="Account Created" completed={progress >= 25} />
-              <SetupItem label="Principal Details" completed={progress >= 50} />
-              <SetupItem label="Email Verification" completed={progress >= 75} />
-              <SetupItem label="Company Logo" completed={progress >= 100} />
+              <SetupItem
+                label="Account Created"
+                completed={progress >= 25}
+              />
+
+              <SetupItem
+                label="Contact Information"
+                completed={progress >= 50}
+              />
+
+              <SetupItem
+                label="Leadership Details"
+                completed={progress >= 75}
+              />
+
+              <SetupItem
+                label="Company Logo"
+                completed={progress >= 100}
+              />
             </div>
+
           </div>
 
           {/* Right Side: Action Button */}

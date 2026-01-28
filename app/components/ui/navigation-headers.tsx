@@ -56,10 +56,10 @@ const NavigationHeaders = ({
       {/* Title + Right Action */}
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-xl font-bold tracking-tight">
             {title}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm font-light tracking-tight">
             {description}
           </p>
         </div>
