@@ -216,19 +216,42 @@ export default function PathshalaSettingsPage() {
     }
 
     const saveLogo = async () => {
-        if (!ensurePathshala()) return
+        if (!ensurePathshala()) return;
         if (!logo) {
-            toast.error("Please upload a logo before saving.")
-            return
+            toast.error("Please upload a logo before saving.");
+            return;
         }
+
         const sizeInBytes = getBase64Size(logo.fileBase64);
 
         if (sizeInBytes > MAX_FILE_SIZE_BYTES_LOGO) {
-            toast.error("Logo size must be under 300 KB")
-            return
+            toast.error("Logo size must be under 300 KB");
+            return;
         }
-        
-    }
+
+        setLoading(true);
+        try {
+            // Send the logo object directly, not wrapped inside { logo }
+            const res: ApiResponse<Pathshala> = await api.post(
+                `/pathshala/update-logo/${pathshala!.pathshalaId}`,
+                logo, // <-- pass FileDetailsReqDTO directly
+                headers
+            );
+
+            if (res.success) {
+                toast.success("Logo saved successfully.");
+            } else {
+                toast.error(res.message || "Failed to save logo.");
+            }
+
+        } catch (err: any) {
+            console.error("Error saving logo:", err);
+            toast.error("Failed to save logo due to server error.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     /* ================= RENDER ================= */
 
